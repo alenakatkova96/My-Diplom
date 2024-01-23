@@ -8,6 +8,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class DashboardPage {
+
     private final SelenideElement header = $(byText("Путешествие дня"));
     private final SelenideElement paymentButton = $(byText("Купить"));
     private final SelenideElement creditButton = $(byText("Купить в кредит"));
@@ -36,4 +37,5 @@ public class DashboardPage {
         formPay.shouldBe(visible);
         return new CreditPage();
     }
+
 }

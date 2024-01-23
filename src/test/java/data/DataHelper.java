@@ -2,8 +2,6 @@ package data;
 
 import com.github.javafaker.Faker;
 import lombok.Value;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -16,20 +14,20 @@ public class DataHelper {
     private DataHelper() {
     }
 
-    public static @NotNull String getLastYear(int minusOneYear) {
+    public static String getLastYear(int minusOneYear) {
         return LocalDate.now().minusYears(minusOneYear).format(DateTimeFormatter.ofPattern("yy"));
     }
 
-
-    public static @NotNull String generateHolderName() {
+    //ДОРАБОТКА
+    public static String generateHolderName() {
         return fakerEn.name().lastName() + " " + fakerEn.name().firstName();
     }
 
-    public static @NotNull String generateMonth(int month) {
+    public static String generateMonth(int month) {
         return LocalDate.now().plusMonths(month).format(DateTimeFormatter.ofPattern("MM"));
     }
 
-    public static @NotNull String generateYear(int year) {
+    public static String generateYear(int year) {
         return LocalDate.now().plusYears(year).format(DateTimeFormatter.ofPattern("yy"));
     }
 
@@ -43,18 +41,16 @@ public class DataHelper {
         String cvc;
     }
 
-    @Contract(pure = true)
-    public static @NotNull String getApprovedCardNumber() {
+    // ДАННЫЕ ДЛЯ ПОЗИТИВНЫХ СЦЕНАРИЕВ
+    public static String getApprovedCardNumber() {
         return ("4444 4444 4444 4441");
     }
 
-    @Contract(pure = true)
-    public static @NotNull String getDeclinedCardNumber() {
+    public static String getDeclinedCardNumber() {
         return ("4444 4444 4444 4442");
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getValidDataWithApprovedCard() {
+    public static CardInfo getValidDataWithApprovedCard() {
         return new CardInfo(getApprovedCardNumber(),
                 generateMonth(0),
                 generateYear(0),
@@ -62,8 +58,7 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getValidDataWithDeclinedCard() {
+    public static CardInfo getValidDataWithDeclinedCard() {
         return new CardInfo(getDeclinedCardNumber(),
                 generateMonth(0),
                 generateYear(0),
@@ -71,8 +66,10 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithEmptyFields() {
+    // ДАННЫЕ ДЛЯ НЕГАТИВНЫХ СЦЕНАРИЕВ
+
+    //Без заполнения полей формы
+    public static CardInfo getCardInfoWithEmptyFields() {
         return new CardInfo(
                 null,
                 null,
@@ -81,8 +78,8 @@ public class DataHelper {
                 null);
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithEmptyNumber() {
+    //С пустым полем Номер карты
+    public static CardInfo getCardInfoWithEmptyNumber() {
         return new CardInfo(null,
                 generateMonth(0),
                 generateYear(0),
@@ -90,9 +87,8 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
-
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithRandomNumber() {
+    //Картой с невалидным номером длиной 16 цифр
+    public static CardInfo getCardInfoWithRandomNumber() {
         return new CardInfo(fakerEn.numerify("#### #### #### ####"),
                 generateMonth(0),
                 generateYear(0),
@@ -100,9 +96,17 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
+    //Картой с номером длиной 17 цифр
+    public static CardInfo getCardInfoWith17() {
+        return new CardInfo(fakerEn.numerify("#### #### #### #### #"),
+                generateMonth(0),
+                generateYear(0),
+                generateHolderName(),
+                fakerEn.numerify("###"));
+    }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWith15() {
+    //Картой с номером длиной 15 цифр
+    public static CardInfo getCardInfoWith15() {
         return new CardInfo(fakerEn.numerify("#### #### #### ###"),
                 generateMonth(0),
                 generateYear(0),
@@ -110,9 +114,18 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
+    //Картой с номером, состоящим из спецсимволов
+    public static CardInfo getCardInfoWithSpecialCharacters() {
+        return new CardInfo(fakerEn.numerify("@#$% !&*( ^&*( )(*&"),
+                generateMonth(0),
+                generateYear(0),
+                generateHolderName(),
+                fakerEn.numerify("###"));
+    }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithNullMonth() {
+
+    //C пустым полем Месяц
+    public static CardInfo getCardInfoWithNullMonth() {
         return new CardInfo(getApprovedCardNumber(),
                 null,
                 generateYear(0),
@@ -120,8 +133,8 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithMonthWithTwoZero() {
+    //Cо значением 00 в поле Месяц
+    public static CardInfo getCardInfoWithMonthWithTwoZero() {
         return new CardInfo(getApprovedCardNumber(),
                 LocalDate.now().format(DateTimeFormatter.ofPattern("00")),
                 generateYear(0),
@@ -129,18 +142,8 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithMonthWithZero() {
-        return new CardInfo(getApprovedCardNumber(),
-                LocalDate.now().format(DateTimeFormatter.ofPattern("0")),
-                generateYear(0),
-                generateHolderName(),
-                fakerEn.numerify("###"));
-    }
-
-
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWith13Month() {
+    //Cо значением 13 в поле Месяц
+    public static CardInfo getCardInfoWith13Month() {
         return new CardInfo(getApprovedCardNumber(),
                 "13",
                 generateYear(0),
@@ -148,18 +151,35 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
-
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithNullYear() {
+    //Cо значением, состоящим из одной цифры в поле Месяц
+    public static CardInfo getCardInfoWithMonthWith1Number() {
         return new CardInfo(getApprovedCardNumber(),
+                fakerEn.numerify("#"),
+                generateYear(0),
+                generateHolderName(),
+                fakerEn.numerify("###"));
+    }
+
+    //Cо значением, состоящим из спецсимвола в поле Месяц
+    public static CardInfo getCardInfoWithMonthWithSpecialCharacters() {
+        return new CardInfo(getApprovedCardNumber(),
+                fakerEn.numerify("&$"),
+                generateYear(0),
+                generateHolderName(),
+                fakerEn.numerify("###"));
+    }
+
+    //С пустым полем Год
+    public static CardInfo getCardInfoWithNullYear() {
+        return new CardInfo(getDeclinedCardNumber(),
                 generateMonth(0),
                 null,
                 generateHolderName(),
                 fakerEn.numerify("###"));
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithLastYear() {
+    //Со значением в поле Год, ранее текущего года
+    public static CardInfo getCardInfoWithLastYear() {
         return new CardInfo(getApprovedCardNumber(),
                 generateMonth(0),
                 getLastYear(1),
@@ -167,9 +187,17 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
+    //Со спецсимволами в поле Год
+    public static CardInfo getCardInfoWithSpecialCharactersYear() {
+        return new CardInfo(getApprovedCardNumber(),
+                generateMonth(0),
+                fakerEn.numerify("&$"),
+                generateHolderName(),
+                fakerEn.numerify("###"));
+    }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWith1NumberYear() {
+    //С одной цифрой в поле Год
+    public static CardInfo getCardInfoWith1NumberYear() {
         return new CardInfo(getApprovedCardNumber(),
                 generateMonth(0),
                 fakerEn.numerify("#"),
@@ -177,8 +205,9 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithNullOwner() {
+
+    //С пустым полем Владелец
+    public static CardInfo getCardInfoWithNullOwner() {
         return new CardInfo(getApprovedCardNumber(),
                 generateMonth(0),
                 generateYear(0),
@@ -187,26 +216,17 @@ public class DataHelper {
     }
 
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithOwnerWithNumbers() {
+    //С цифрами в поле Владелец
+    public static CardInfo getCardInfoWithOwnerWithNumbers() {
         return new CardInfo(getApprovedCardNumber(),
                 generateMonth(0),
                 generateYear(0),
-                "2342432",
+                fakerEn.numerify("####### ######"),
                 fakerEn.numerify("###"));
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithOwnerCyrillic() {
-        return new CardInfo(getApprovedCardNumber(),
-                generateMonth(0),
-                generateYear(0),
-                fakerRu.name().firstName() + " " + fakerRu.name().lastName(),
-                fakerEn.numerify("###"));
-    }
-
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithOwnerSpecialCharacters() {
+    //Со спецсимволами в поле Владелец
+    public static CardInfo getCardInfoWithOwnerSpecialCharacters() {
         return new CardInfo(getApprovedCardNumber(),
                 generateMonth(0),
                 generateYear(0),
@@ -214,8 +234,17 @@ public class DataHelper {
                 fakerEn.numerify("###"));
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithEmptyCVC() {
+    //Со значением в поле Владелец, набранным кириллицей
+    public static CardInfo getCardInfoWithOwnerCyrillic() {
+        return new CardInfo(getApprovedCardNumber(),
+                generateMonth(0),
+                generateYear(0),
+                fakerRu.name().firstName() + " " + fakerRu.name().lastName(),
+                fakerEn.numerify("###"));
+    }
+
+    //С пустым полем CVC/CVV
+    public static CardInfo getCardInfoWithEmptyCVC() {
         return new CardInfo(getApprovedCardNumber(),
                 generateMonth(0),
                 generateYear(0),
@@ -224,8 +253,8 @@ public class DataHelper {
     }
 
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithCVC2Numbers() {
+    //С двумя цифрами в поле CVC/CVV
+    public static CardInfo getCardInfoWithCVC2Numbers() {
         return new CardInfo(getApprovedCardNumber(),
                 generateMonth(0),
                 generateYear(0),
@@ -233,13 +262,22 @@ public class DataHelper {
                 fakerEn.numerify("##"));
     }
 
-    @Contract(" -> new")
-    public static @NotNull CardInfo getCardInfoWithCVC1Numbers() {
+    //С буквами в поле CVC/CVV
+    public static CardInfo getCardInfoWithCVCSpecialCharacters() {
         return new CardInfo(getApprovedCardNumber(),
                 generateMonth(0),
                 generateYear(0),
                 generateHolderName(),
-                fakerEn.numerify("#"));
+                fakerEn.numerify("*&*"));
     }
 
+    //Со спецсимволами в поле CVC/CVV
+    public static CardInfo getCardInfoWithCVCLetter() {
+        return new CardInfo(getApprovedCardNumber(),
+                generateMonth(0),
+                generateYear(0),
+                generateHolderName(),
+                "CVC");
+    }
 }
+

@@ -3,7 +3,6 @@ package page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import data.DataHelper;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 
@@ -27,6 +26,7 @@ public class CreditPage {
     private final SelenideElement invalidDateFormat = $(byText("Неверно указан срок действия карты"));
     private final SelenideElement cardEndedError = $(byText("Истёк срок действия карты"));
 
+
     public CreditPage() {
         header.shouldBe(visible);
     }
@@ -43,7 +43,7 @@ public class CreditPage {
         errorNotification.$("[class=notification__content]").should(text("Ошибка! Банк отказал в проведении операции."));
     }
 
-    public void inputData(DataHelper.@NotNull CardInfo card) {
+    public void inputData(DataHelper.CardInfo card) {
         number.setValue(card.getNumber());
         month.setValue(card.getMonth());
         year.setValue(card.getYear());
@@ -67,4 +67,5 @@ public class CreditPage {
     public void checkingCardEnded() {
         cardEndedError.shouldBe(Condition.visible);
     }
+
 }

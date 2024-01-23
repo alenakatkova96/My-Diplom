@@ -13,7 +13,7 @@ import page.DashboardPage;
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CreditTest {
+public class CreditUITest {
     DashboardPage page = open("http://localhost:8080/", DashboardPage.class);
 
     @BeforeAll
@@ -48,6 +48,7 @@ public class CreditTest {
         assertEquals("DECLINED", actual);
     }
 
+    //Без заполнения полей формы
     @Test
     @DisplayName("Card with empty fields")
     void shouldFailValidationCardWithEmptyFields() {
@@ -57,15 +58,7 @@ public class CreditTest {
         creditPage.checkingEmptyField();
     }
 
-    @Test
-    @DisplayName("Card with empty number")
-    void shouldFailValidationWithEmptyCardNumber() {
-        var creditPage = page.creditButtonClick();
-        var cardInfo = DataHelper.getCardInfoWithEmptyNumber();
-        creditPage.inputData(cardInfo);
-        creditPage.checkingWrongFormat();
-    }
-
+    //Картой с невалидным номером длиной 16 цифр
     @Test
     @DisplayName("Card with random number")
     void shouldDeclineTransactionCardWithRandomNumber() {
@@ -75,6 +68,17 @@ public class CreditTest {
         creditPage.getErrorNotification();
     }
 
+    //С пустым полем Номер карты
+    @Test
+    @DisplayName("Card with empty number")
+    void shouldFailValidationWithEmptyCardNumber() {
+        var creditPage = page.creditButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithEmptyNumber();
+        creditPage.inputData(cardInfo);
+        creditPage.checkingEmptyField();
+    }
+
+    //Картой с невалидным номером длиной 15 цифр
     @Test
     @DisplayName("Card with 15 numbers")
     void shouldFailValidationWithCard15Numbers() {
@@ -84,17 +88,39 @@ public class CreditTest {
         creditPage.checkingWrongFormat();
     }
 
+    //Картой с номером длиной 17 цифр
+    @Test
+    @DisplayName("Card with 17 numbers")
+    void shouldFailValidationWithCard17Numbers() {
+        var creditPage = page.creditButtonClick();
+        var cardInfo = DataHelper.getCardInfoWith17();
+        creditPage.inputData(cardInfo);
+        creditPage.checkingWrongFormat();
+    }
+
+    //Картой с номером, состоящим из спецсимволов
+    @Test
+    @DisplayName("Card with with special characters")
+    void shouldFailValidationCardWithSpecialCharacters() {
+        var creditPage = page.creditButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithSpecialCharacters();
+        creditPage.inputData(cardInfo);
+        creditPage.checkingWrongFormat();
+    }
+
+    //C пустым полем Месяц
     @Test
     @DisplayName("Card with empty month")
     void shouldFailValidationCardWithEmptyMonth() {
         var creditPage = page.creditButtonClick();
         var cardInfo = DataHelper.getCardInfoWithNullMonth();
         creditPage.inputData(cardInfo);
-        creditPage.checkingWrongFormat();
+        creditPage.checkingEmptyField();
     }
 
+    //Cо значением 00 в поле Месяц
     @Test
-    @DisplayName("Card with two zero in month")
+    @DisplayName("Card with zero in month")
     void shouldFailValidationCardWithZeroInMonth() {
         var creditPage = page.creditButtonClick();
         var cardInfo = DataHelper.getCardInfoWithMonthWithTwoZero();
@@ -102,15 +128,7 @@ public class CreditTest {
         creditPage.checkingWrongDateFormat();
     }
 
-    @Test
-    @DisplayName("Card with month with one zero")
-    void shouldFailValidationCardWith1NumberMonth() {
-        var creditPage = page.creditButtonClick();
-        var cardInfo = DataHelper.getCardInfoWithMonthWithZero();
-        creditPage.inputData(cardInfo);
-        creditPage.checkingWrongFormat();
-    }
-
+    //Cо значением 13 в поле Месяц getCardInfoWith13Month
     @Test
     @DisplayName("Card with month number 13")
     void shouldFailValidationWithMonthAbove12() {
@@ -120,15 +138,37 @@ public class CreditTest {
         creditPage.checkingWrongDateFormat();
     }
 
+    //Cо значением, состоящим из одной цифры в поле Месяц
+    @Test
+    @DisplayName("Card with month with one number")
+    void shouldFailValidationCardWith1NumberMonth() {
+        var creditPage = page.creditButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithMonthWith1Number();
+        creditPage.inputData(cardInfo);
+        creditPage.checkingWrongFormat();
+    }
+
+    //Cо значением, состоящим из спецсимвола в поле Месяц
+    @Test
+    @DisplayName("Card with month with special characters")
+    void shouldFailValidationCardWithMonthSpecialCharacters() {
+        var creditPage = page.creditButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithMonthWithSpecialCharacters();
+        creditPage.inputData(cardInfo);
+        creditPage.checkingWrongFormat();
+    }
+
+    //С пустым полем Год
     @Test
     @DisplayName("Card with empty year")
     void shouldFailValidationCardWithEmptyYear() {
         var creditPage = page.creditButtonClick();
         var cardInfo = DataHelper.getCardInfoWithNullYear();
         creditPage.inputData(cardInfo);
-        creditPage.checkingWrongFormat();
+        creditPage.checkingEmptyField();
     }
 
+    //Со значением в поле Год, ранее текущего года
     @Test
     @DisplayName("Card with last year")
     void shouldFailValidationCardWithLastYear() {
@@ -138,6 +178,17 @@ public class CreditTest {
         creditPage.checkingCardEnded();
     }
 
+    //Со спецсимволами в поле Год
+    @Test
+    @DisplayName("Card with year with special characters")
+    void shouldFailValidationCardWithSpecialCharactersYear() {
+        var creditPage = page.creditButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithSpecialCharactersYear();
+        creditPage.inputData(cardInfo);
+        creditPage.checkingWrongFormat();
+    }
+
+    //С одной цифрой в поле Год
     @Test
     @DisplayName("Card with year with one number")
     void shouldFailValidationCardWith1NumberYear() {
@@ -147,6 +198,7 @@ public class CreditTest {
         creditPage.checkingWrongFormat();
     }
 
+    //С пустым полем Владелец
     @Test
     @DisplayName("Card with empty owner")
     void shouldFailValidationCardWithEmptyOwner() {
@@ -156,8 +208,9 @@ public class CreditTest {
         creditPage.checkingEmptyField();
     }
 
+    //С цифрами в поле Владелец
     @Test
-    @DisplayName("Card with owner with name with numbers")
+    @DisplayName("Card with owner with name of numbers")
     void shouldFailValidationCardWithOwnerWithNumbers() {
         var creditPage = page.creditButtonClick();
         var cardInfo = DataHelper.getCardInfoWithOwnerWithNumbers();
@@ -165,16 +218,7 @@ public class CreditTest {
         creditPage.checkingWrongFormat();
     }
 
-
-    @Test
-    @DisplayName("Card with owner with name with cyrillic")
-    void shouldFailValidationCardWithNameWithCyrillic() {
-        var creditPage = page.creditButtonClick();
-        var cardInfo = DataHelper.getCardInfoWithOwnerCyrillic();
-        creditPage.inputData(cardInfo);
-        creditPage.checkingWrongFormat();
-    }
-
+    //Со спецсимволами в поле Владелец
     @Test
     @DisplayName("Card with owner with name with special characters")
     void shouldFailValidationCardWithNameSpecialCharacters() {
@@ -184,6 +228,17 @@ public class CreditTest {
         creditPage.checkingWrongFormat();
     }
 
+    //Со значением в поле Владелец, набранным кириллицей
+    @Test
+    @DisplayName("Card with owner with name with cyrillic")
+    void shouldFailValidationCardWithNameWithCyrillic() {
+        var creditPage = page.creditButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithOwnerCyrillic();
+        creditPage.inputData(cardInfo);
+        creditPage.checkingWrongFormat();
+    }
+
+    //С пустым полем CVC/CVV
     @Test
     @DisplayName("Card with empty CVC")
     void shouldFailValidationCardWithEmptyCVC() {
@@ -193,6 +248,7 @@ public class CreditTest {
         creditPage.checkingEmptyField();
     }
 
+    //С двумя цифрами в поле CVC/CVV
     @Test
     @DisplayName("Card with 2 numbers in CVC")
     void shouldFailValidationCardWith2NumbersInCVC() {
@@ -202,14 +258,24 @@ public class CreditTest {
         creditPage.checkingWrongFormat();
     }
 
+    //С буквами в поле CVC/CVV
     @Test
-    @DisplayName("Card with 1 numbers in CVC")
-    void shouldFailValidationCardWith1NumberInCVC() {
+    @DisplayName("Card with special characters in CVC")
+    void shouldFailValidationCardWithWithCVCSpecialCharacters() {
         var creditPage = page.creditButtonClick();
-        var cardInfo = DataHelper.getCardInfoWithCVC1Numbers();
+        var cardInfo = DataHelper.getCardInfoWithCVCSpecialCharacters();
         creditPage.inputData(cardInfo);
         creditPage.checkingWrongFormat();
     }
 
+    //Со спецсимволами в поле CVC/CVV
+    @Test
+    @DisplayName("Card with letters in CVC")
+    void shouldFailValidationCardWithCVCLetter() {
+        var creditPage = page.creditButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithCVCLetter();
+        creditPage.inputData(cardInfo);
+        creditPage.checkingWrongFormat();
+    }
 
 }

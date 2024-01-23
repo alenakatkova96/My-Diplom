@@ -1,52 +1,70 @@
-<h1> Дипломный проект по профессии «Тестировщик» </h1>
-<h4> Aвтоматизация тестирования комплексного сервиса, взаимодействующего с СУБД и API Банка.</h4>
+# Дипломный проект по профессии «Тестировщик»
 
-<h3> Подготовка к работе </h3>
-<ol>
-<li> Установить Браузер Google Chrome </li>
-<li> Установить Git - систему контроля версий </li>
-<li> Зарегистрироваться на сайте GitHUB </li>
-<li> Установить IntelliJ IDEA </li>
-<li> Установить программу Postman </li>
-<li> Установить программу DBeaver </li>
-<li> Установить программу Docker Desktop </li>
-<li> Открыть программу IntelliJ IDEA </li>
-<li> Склонировать публичный репозиторий  </li>
+Автоматизация тестирования комплексного сервиса, взаимодействующего с СУБД и API Банка.
 
-</ol>
-<h3> Начало работы </h3>
-<ol>
-<li> Чтобы получить локальную копию проекта, необходимо склонировать репозиторий Pexini/Diplom : </li>
-<li> c помощью команды git clone и вставить ссылку: </li>
-     для HTTPS:  https://github.com/alenakatkova96/My-Diplom.git <br>
-     для SSH: git@github.com:alenakatkova96/My-Diplom.git <br>
-<li> Через терминал запустить Docker контейнер командой: docker-compose up --build </li>
-</ol>
+## Начало работы
 
-<h4> Для работы с БД MySQL </h4>
-<ol>
-<li> Через терминал открыть БД MySQL командой: <br> </li>
-<u> java "-Dspring.datasource.url=jdbc:mysql://localhost:3306/app" -jar aqa-shop.jar </u>
-<li> В браузере Сhrome открыть URL http://localhost/8080 </li>
-<li> Запустить DBeaver, проверить соединения с MySQL</li>
-<li> Запустить отчеты командой в терминале: <br>
-./gradlew allureServe
-<li> Остановить allureServe командой в терминале: CTRL + C</li>
-</ol> 
+Чтобы получить локальную копию проекта, необходимо склонировать репозиторий командой 
 
-<h4>Для работы с БД PostgresSQL</h4>
-<ol>
-<li> Через терминал открыть БД PostgresSQL из терминала командой: <br> </li>
-<u>java "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" -jar aqa-shop.jar</u>
-<li> В браузере Сhrome открыть URL http://localhost/8080 </li>
-<li> Запустить DBeaver, проверить соединения с PostgresSQL</li>
-<li> Запустить отчеты командой в терминале: <br>
-./gradlew allureServe
-<li> Остановить allureServe командой в терминале: CTRL + C</li>
-</ol>
+*git@github.com:alenakatkova96/My-Diplom.git*
 
-<h3> Завершение работы </h3>
-<ol>
-<li> Остановить работу приложение из терминала командой: Ctrl + C </li>
-<li> Остановить контейнеры Docker из терминала : docker-compose down</li>
-</ol>
+
+## Prerequisites
+
+На ПК должны быть установлены и настроены:
+
+- Git
+- Браузер Google Chrome
+- IntelliJ IDEA
+- Docker Desktop
+
+## Установка и запуск
+
+1. Открыть проект Diploma в IntelliJ IDEA
+
+2. В терминале запустить контейнеры Docker командой:
+   
+*docker-compose up --build*
+
+3. Запустить приложение с БД MySQL из терминала командой:
+
+*java "-Dspring.datasource.url=jdbc:mysql://localhost:3306/app" -jar aqa-shop.jar*
+
+4. Ввести в браузере Сhrome URL http://localhost/8080, чтобы проверить запуск приложения.
+
+5. Запустить тесты с БД MySQL из терминала командой:
+   
+*./gradlew clean test "-Ddb.url=jdbc:mysql://localhost:3306/app"*
+
+6. Генерация отчетов по тестированию и их просмотр в браузере запускается командой в терминале:
+
+   *./gradlew allureServe*
+   
+7. Остановить allureServe командой в терминале: *CTRL + C*
+
+8. На запрос "Завершить выполнение пакетного файла [Y(да)/N(нет)]?" ввести в терминале *Y*
+
+9. Запустить приложение с БД PostgresSQL из терминала командой:
+   
+*java "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" -jar aqa-shop.jar*
+
+10. Запустить тесты с БД PostgresSQL из терминала командой:
+    
+*./gradlew clean test "-Ddb.url=jdbc:postgresql://localhost:5432/app"*
+
+11. Генерация отчетов по тестированию и их просмотр в браузере запускается командой в терминале:
+
+    *./gradlew allureServe*
+    
+13. Остановить allureServe командой в терминале: *CTRL + C*
+
+14. На запрос "Завершить выполнение пакетного файла [Y(да)/N(нет)]?" ввести в терминале *Y*
+
+15. Остановить приложение из терминала командой: *CTRL + C*
+   
+16. Остановить контейнеры Docker из терминала командой: *docker-compose down*
+
+
+* ### [План автоматизации тестирования]()
+* ### [Отчёт о проведённом тестировании]()
+* ### [Отчёт о проведённой автоматизации]()

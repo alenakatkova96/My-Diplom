@@ -1,13 +1,14 @@
 package data;
 
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.specification.RequestSpecification;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.response.ValidatableResponse;
 
 import static io.restassured.RestAssured.given;
 
-public class APIHelper {
+public class ApiHelper {
     private static RequestSpecification requestSpec = new RequestSpecBuilder()
             .setBaseUri("http://localhost")
             .setPort(8080)

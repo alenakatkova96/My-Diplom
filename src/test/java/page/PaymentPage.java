@@ -3,7 +3,6 @@ package page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import data.DataHelper;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 
@@ -11,7 +10,9 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
+
 public class PaymentPage {
+
     private final SelenideElement header = $(byText("Оплата по карте"));
     private final SelenideElement number = $("[placeholder='0000 0000 0000 0000']");
     private final SelenideElement month = $("[placeholder='08']");
@@ -44,7 +45,7 @@ public class PaymentPage {
         errorNotification.$("[class=notification__content]").should(text("Ошибка! Банк отказал в проведении операции."));
     }
 
-    public void inputData(DataHelper.@NotNull CardInfo card) {
+    public void inputData(DataHelper.CardInfo card) {
         number.setValue(card.getNumber());
         month.setValue(card.getMonth());
         year.setValue(card.getYear());
@@ -68,4 +69,7 @@ public class PaymentPage {
     public void checkingCardEnded() {
         cardEndedError.shouldBe(Condition.visible);
     }
+
+
 }
+

@@ -2,12 +2,12 @@ package data;
 
 import lombok.SneakyThrows;
 import org.apache.commons.dbutils.QueryRunner;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import static java.sql.DriverManager.getConnection;
+
 
 public class DataBaseHelper {
     private static final QueryRunner runner = new QueryRunner();
@@ -20,7 +20,6 @@ public class DataBaseHelper {
     }
 
 
-    @org.jetbrains.annotations.Nullable
     @SneakyThrows
     public static String getStatusCreditRequest() {
         var codesql = "SELECT status FROM credit_request_entity ORDER BY created DESC LIMIT 1;";
@@ -34,7 +33,7 @@ public class DataBaseHelper {
     }
 
     @SneakyThrows
-    public static @Nullable String getStatusPaymentRequest() {
+    public static String getStatusPaymentRequest() {
         var codesql = "SELECT status FROM payment_entity ORDER BY created DESC LIMIT 1;";
         var conn = getConn();
         var countStatement = conn.createStatement();

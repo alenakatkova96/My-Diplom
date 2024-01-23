@@ -10,19 +10,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import page.DashboardPage;
 
-
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PayTest {
+public class PayUITest {
     DashboardPage page = open("http://localhost:8080/", DashboardPage.class);
-
 
     @BeforeAll
     static void setUpAll() {
         SelenideLogger.addListener("allure", new AllureSelenide());
     }
-
 
     @AfterAll
     static void tearDownAll() {
@@ -51,6 +48,7 @@ public class PayTest {
         assertEquals("DECLINED", actual);
     }
 
+    //Без заполнения полей формы
     @Test
     @DisplayName("Card with empty fields")
     void shouldFailValidationCardWithEmptyFields() {
@@ -60,15 +58,7 @@ public class PayTest {
         paymentPage.checkingEmptyField();
     }
 
-    @Test
-    @DisplayName("Card with empty number")
-    void shouldFailValidationWithEmptyCardNumber() {
-        var paymentPage = page.paymentButtonClick();
-        var cardInfo = DataHelper.getCardInfoWithEmptyNumber();
-        paymentPage.inputData(cardInfo);
-        paymentPage.checkingWrongFormat();
-    }
-
+    //Картой с невалидным номером длиной 16 цифр
     @Test
     @DisplayName("Card with random number")
     void shouldDeclineTransactionCardWithRandomNumber() {
@@ -78,6 +68,17 @@ public class PayTest {
         paymentPage.getErrorNotification();
     }
 
+    //С пустым полем Номер карты
+    @Test
+    @DisplayName("Card with empty number")
+    void shouldFailValidationWithEmptyCardNumber() {
+        var paymentPage = page.paymentButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithEmptyNumber();
+        paymentPage.inputData(cardInfo);
+        paymentPage.checkingEmptyField();
+    }
+
+    //Картой с невалидным номером длиной 15 цифр
     @Test
     @DisplayName("Card with 15 numbers")
     void shouldFailValidationWithCard15Numbers() {
@@ -87,17 +88,39 @@ public class PayTest {
         paymentPage.checkingWrongFormat();
     }
 
+    //Картой с номером длиной 17 цифр
+    @Test
+    @DisplayName("Card with 17 numbers")
+    void shouldFailValidationWithCard17Numbers() {
+        var paymentPage = page.paymentButtonClick();
+        var cardInfo = DataHelper.getCardInfoWith17();
+        paymentPage.inputData(cardInfo);
+        paymentPage.checkingWrongFormat();
+    }
+
+    //Картой с номером, состоящим из спецсимволов
+    @Test
+    @DisplayName("Card with with special characters")
+    void shouldFailValidationCardWithSpecialCharacters() {
+        var paymentPage = page.paymentButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithSpecialCharacters();
+        paymentPage.inputData(cardInfo);
+        paymentPage.checkingWrongFormat();
+    }
+
+    //C пустым полем Месяц
     @Test
     @DisplayName("Card with empty month")
     void shouldFailValidationCardWithEmptyMonth() {
         var paymentPage = page.paymentButtonClick();
         var cardInfo = DataHelper.getCardInfoWithNullMonth();
         paymentPage.inputData(cardInfo);
-        paymentPage.checkingWrongFormat();
+        paymentPage.checkingEmptyField();
     }
 
+    //Cо значением 00 в поле Месяц
     @Test
-    @DisplayName("Card with two zero in month")
+    @DisplayName("Card with zero in month")
     void shouldFailValidationCardWithZeroInMonth() {
         var paymentPage = page.paymentButtonClick();
         var cardInfo = DataHelper.getCardInfoWithMonthWithTwoZero();
@@ -105,15 +128,7 @@ public class PayTest {
         paymentPage.checkingWrongDateFormat();
     }
 
-    @Test
-    @DisplayName("Card with one zero in month")
-    void shouldFailValidationCardWith1NumberMonth() {
-        var paymentPage = page.paymentButtonClick();
-        var cardInfo = DataHelper.getCardInfoWithMonthWithZero();
-        paymentPage.inputData(cardInfo);
-        paymentPage.checkingWrongFormat();
-    }
-
+    //Cо значением 13 в поле Месяц getCardInfoWith13Month
     @Test
     @DisplayName("Card with month number 13")
     void shouldFailValidationWithMonthAbove12() {
@@ -123,15 +138,37 @@ public class PayTest {
         paymentPage.checkingWrongDateFormat();
     }
 
+    //Cо значением, состоящим из одной цифры в поле Месяц
+    @Test
+    @DisplayName("Card with month with one number")
+    void shouldFailValidationCardWith1NumberMonth() {
+        var paymentPage = page.paymentButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithMonthWith1Number();
+        paymentPage.inputData(cardInfo);
+        paymentPage.checkingWrongFormat();
+    }
+
+    //Cо значением, состоящим из спецсимвола в поле Месяц
+    @Test
+    @DisplayName("Card with month with special characters")
+    void shouldFailValidationCardWithMonthSpecialCharacters() {
+        var paymentPage = page.paymentButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithMonthWithSpecialCharacters();
+        paymentPage.inputData(cardInfo);
+        paymentPage.checkingWrongFormat();
+    }
+
+    //С пустым полем Год
     @Test
     @DisplayName("Card with empty year")
     void shouldFailValidationCardWithEmptyYear() {
         var paymentPage = page.paymentButtonClick();
         var cardInfo = DataHelper.getCardInfoWithNullYear();
         paymentPage.inputData(cardInfo);
-        paymentPage.checkingWrongFormat();
+        paymentPage.checkingEmptyField();
     }
 
+    //Со значением в поле Год, ранее текущего года
     @Test
     @DisplayName("Card with last year")
     void shouldFailValidationCardWithLastYear() {
@@ -141,6 +178,17 @@ public class PayTest {
         paymentPage.checkingCardEnded();
     }
 
+    //Со спецсимволами в поле Год
+    @Test
+    @DisplayName("Card with year with special characters")
+    void shouldFailValidationCardWithSpecialCharactersYear() {
+        var paymentPage = page.paymentButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithSpecialCharactersYear();
+        paymentPage.inputData(cardInfo);
+        paymentPage.checkingWrongFormat();
+    }
+
+    //С одной цифрой в поле Год
     @Test
     @DisplayName("Card with year with one number")
     void shouldFailValidationCardWith1NumberYear() {
@@ -150,6 +198,7 @@ public class PayTest {
         paymentPage.checkingWrongFormat();
     }
 
+    //С пустым полем Владелец
     @Test
     @DisplayName("Card with empty owner")
     void shouldFailValidationCardWithEmptyOwner() {
@@ -159,8 +208,9 @@ public class PayTest {
         paymentPage.checkingEmptyField();
     }
 
+    //С цифрами в поле Владелец
     @Test
-    @DisplayName("Card with owner with name with numbers")
+    @DisplayName("Card with owner with name of numbers")
     void shouldFailValidationCardWithOwnerWithNumbers() {
         var paymentPage = page.paymentButtonClick();
         var cardInfo = DataHelper.getCardInfoWithOwnerWithNumbers();
@@ -168,16 +218,7 @@ public class PayTest {
         paymentPage.checkingWrongFormat();
     }
 
-    @Test
-    @DisplayName("Card with owner with name with cyrillic")
-    void shouldFailValidationCardWithNameWithCyrillic() {
-        var paymentPage = page.paymentButtonClick();
-        var cardInfo = DataHelper.getCardInfoWithOwnerCyrillic();
-        paymentPage.inputData(cardInfo);
-        paymentPage.checkingWrongFormat();
-    }
-
-
+    //Со спецсимволами в поле Владелец
     @Test
     @DisplayName("Card with owner with name with special characters")
     void shouldFailValidationCardWithNameSpecialCharacters() {
@@ -187,6 +228,17 @@ public class PayTest {
         paymentPage.checkingWrongFormat();
     }
 
+    //Со значением в поле Владелец, набранным кириллицей
+    @Test
+    @DisplayName("Card with owner with name with cyrillic")
+    void shouldFailValidationCardWithNameWithCyrillic() {
+        var paymentPage = page.paymentButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithOwnerCyrillic();
+        paymentPage.inputData(cardInfo);
+        paymentPage.checkingWrongFormat();
+    }
+
+    //С пустым полем CVC/CVV
     @Test
     @DisplayName("Card with empty CVC")
     void shouldFailValidationCardWithEmptyCVC() {
@@ -196,7 +248,7 @@ public class PayTest {
         paymentPage.checkingEmptyField();
     }
 
-
+    //С двумя цифрами в поле CVC/CVV
     @Test
     @DisplayName("Card with 2 numbers in CVC")
     void shouldFailValidationCardWith2NumbersInCVC() {
@@ -206,15 +258,24 @@ public class PayTest {
         paymentPage.checkingWrongFormat();
     }
 
-
+    //С буквами в поле CVC/CVV
     @Test
-    @DisplayName("Card with 1 numbers in CVC")
-    void shouldFailValidationCardWith1NumbersInCVC() {
+    @DisplayName("Card with special characters in CVC")
+    void shouldFailValidationCardWithWithCVCSpecialCharacters() {
         var paymentPage = page.paymentButtonClick();
-        var cardInfo = DataHelper.getCardInfoWithCVC1Numbers();
+        var cardInfo = DataHelper.getCardInfoWithCVCSpecialCharacters();
         paymentPage.inputData(cardInfo);
         paymentPage.checkingWrongFormat();
-
-
     }
+
+    //Со спецсимволами в поле CVC/CVV
+    @Test
+    @DisplayName("Card with letters in CVC")
+    void shouldFailValidationCardWithCVCLetter() {
+        var paymentPage = page.paymentButtonClick();
+        var cardInfo = DataHelper.getCardInfoWithCVCLetter();
+        paymentPage.inputData(cardInfo);
+        paymentPage.checkingWrongFormat();
+    }
+
 }
